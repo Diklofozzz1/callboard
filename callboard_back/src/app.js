@@ -7,6 +7,9 @@ const logger = require('morgan');
 const indexRouter = require('./routes');
 const usersRouter = require('./routes/users');
 
+const connect = require('./models/db_models')
+connect.Connect.sync().then()
+
 const app = express();
 const port = 3000;
 
