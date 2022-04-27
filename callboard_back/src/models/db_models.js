@@ -44,6 +44,10 @@ const User = Connect.define(
             type: DataTypes.TEXT,
             allowNull: false
         },
+        rating:{
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
         verified: {
             type: DataTypes.BOOLEAN,
             allowNull: true
