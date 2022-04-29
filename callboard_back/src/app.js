@@ -1,17 +1,16 @@
-const passport = require('passport');
-const cors = require('cors');
+import express from "express";
 
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const http = require('http');
+import cookieParser from 'cookie-parser';
+import http from 'http';
 
-const indexRouter = require('./routes');
-const usersRouter = require('./routes/users');
-const createUser = require('./routes/createUser')
+// import routes from './routes';
+import passport from 'passport';
+import cors from 'cors';
 
-const connect = require('./models/db_models')
-connect.Connect.sync().then()
+import userController from "./routes/userController.js";
+import Connect from "./models/db_models.js"
 
+Connect.sync().then()
 const app = express();
 const port = 3080;
 
@@ -21,9 +20,8 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(passport.initialize());
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/createUser', createUser);
+// app.use('/', routes);
+app.use('/users', userController);
 
 const server = http.Server(app)
 
@@ -31,4 +29,4 @@ server.listen(port, () => {
     console.log(`SERVER LISTENING ON PORT: ${port}`)
 })
 
-module.exports = app;
+export default app;

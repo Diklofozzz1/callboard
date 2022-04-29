@@ -1,4 +1,4 @@
-const {Sequelize, DataTypes} = require('sequelize')
+import { Sequelize, DataTypes } from 'sequelize';
 
 const Connect = new Sequelize(
     'vkr_db',
@@ -285,4 +285,6 @@ AnnouncementPhoto.belongsTo(Announcement, {
 
 //-------------------------/AnnouncementPhoto/---------------------------
 
-module.exports = {Connect}
+
+
+export default Connect;

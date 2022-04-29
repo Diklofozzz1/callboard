@@ -1,10 +1,8 @@
-const crypto = require('crypto');
-const dotenv = require("dotenv");
+import crypto from 'crypto';
+import dotenv from "dotenv";
 
 dotenv.config()
 
-const generateMD5 = (value) => {
+export const generateMD5 = (value) => {
     return crypto.createHash('sha256', process.env.SECRET_KEY).update(value).digest("hex")
 }
-
-module.exports = {generateMD5}
