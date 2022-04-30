@@ -9,10 +9,13 @@ import cors from 'cors';
 
 import userController from "./routes/userController.js";
 import Connect from "./models/db_models.js"
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 Connect.sync().then()
 const app = express();
-const port = 3080;
+const port = process.env.PORT || 3070;
 
 app.use(cors());
 app.use(express.json());

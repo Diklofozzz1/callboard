@@ -7,6 +7,7 @@ import passport from '../utils/passport.js';
 import Connect from "../models/db_models.js"
 import {generateMD5} from "../utils/MD5generator.js";
 import validator from "validator";
+import {mailer} from '../utils/emailController.js'
 
 dotenv.config();
 
@@ -50,6 +51,8 @@ router.post('/create', async (req, res) => {
         }
 
         const user = await Connect.models.User.create(userData)
+
+        mailer(userData.email, 'Email confirmation [Callboard App, NO REPLY!]', `Follow this link to confirm your email: <a href="http://localhost:${process.env.PORT || 3070}/users/verify/${user.id}"> FOLLOW ME! </a>`)
 
         res.status(201).json({
             status: 'Success',
@@ -183,6 +186,41 @@ router.patch('/update', passport.authenticate("jwt"), async (req, res) => {
             info: 'User data updated!',
             data: user
         })
+
+    } catch (err) {
+        res.status(500).json({
+            status: 'Server Error',
+            data: err
+        });
+    }
+})
+
+/* User email Verification  */
+router.get('/verify/:id', async (req, res) => {
+    try {
+        const user = await Connect.models.User.findOne({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        if (!user) {
+            res.status(404).json({
+                status: 'Error',
+                data: 'User not found'
+            })
+        } else {
+            if (user.verified) {
+                res.status(409).json({
+                    status: 'Error',
+                    data: 'User already verified!'
+                })
+            } else {
+                user.update({
+                    verified: true
+                })
+            }
+        }
 
     } catch (err) {
         res.status(500).json({

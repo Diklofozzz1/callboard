@@ -20,7 +20,7 @@ passport.use(new JWTStrategy({
                     id: jwtPayload.data.id
                 },
                 attributes: {
-                    exclude: ['password', 'verified']
+                    exclude: ['password']
                 }
             });
 
