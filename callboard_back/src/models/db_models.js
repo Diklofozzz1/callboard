@@ -70,20 +70,16 @@ const Chat = Connect.define(
 
 Chat.belongsTo(User, {
         foreignKey: {
-            user1_id: {
-                type: DataTypes.UUID,
-                allowNull: false
-            }
+            name: 'user1_id',
+            allowNull: false
         }
     }
 )
 
 Chat.belongsTo(User, {
         foreignKey: {
-            user2_id: {
-                type: DataTypes.UUID,
-                allowNull: false
-            }
+            name: 'user2_id',
+            allowNull: false
         }
     }
 )
@@ -109,20 +105,16 @@ const Message = Connect.define(
 
 Message.belongsTo(User, {
         foreignKey: {
-            user_id: {
-                type: DataTypes.UUID,
-                allowNull: false
-            }
+            name: 'user_id',
+            allowNull: false
         }
     }
 )
 
 Message.belongsTo(Chat, {
         foreignKey: {
-            chat_id: {
-                type: DataTypes.UUID,
-                allowNull: false
-            }
+            name: 'chat_id',
+            allowNull: false
         }
     }
 )
@@ -156,20 +148,16 @@ const Comments = Connect.define(
 
 Comments.belongsTo(User, {
         foreignKey: {
-            created_by: {
-                type: DataTypes.UUID,
-                allowNull: false
-            }
+            name: 'created_by',
+            allowNull: false
         }
     }
 )
 
 Comments.belongsTo(User, {
         foreignKey: {
-            linked_to_user: {
-                type: DataTypes.UUID,
-                allowNull: false
-            }
+            name: 'linked_to_user',
+            allowNull: false
         }
     }
 )
@@ -177,10 +165,10 @@ Comments.belongsTo(User, {
 
 //------------------------------/Comments/-------------------------------
 
-//------------------------------ Region ---------------------------------
+//------------------------------ Category ---------------------------------
 
-const Region = Connect.define(
-    'Region',
+const Category = Connect.define(
+    'Category',
     {
         id: {
             type: DataTypes.UUID,
@@ -194,7 +182,7 @@ const Region = Connect.define(
     }
 );
 
-//------------------------------/Region/---------------------------------
+//------------------------------/Category/---------------------------------
 
 //------------------------------ Announcement ---------------------------
 
@@ -218,6 +206,10 @@ const Announcement = Connect.define(
             type: DataTypes.TEXT,
             allowNull: false
         },
+        address: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
         is_auction: {
             type: DataTypes.BOOLEAN,
             allowNull: false
@@ -230,26 +222,26 @@ const Announcement = Connect.define(
             type: DataTypes.DATEONLY,
             allowNull: true
         },
+        complated: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
 
     }
 );
 
 Announcement.belongsTo(User, {
         foreignKey: {
-            created_by: {
-                type: DataTypes.UUID,
-                allowNull: false
-            }
+            name: 'created_by',
+            allowNull: false
         }
     }
 )
 
-Announcement.belongsTo(Region, {
+Announcement.belongsTo(Category, {
         foreignKey: {
-            address: {
-                type: DataTypes.UUID,
-                allowNull: false
-            }
+            name: 'category',
+            allowNull: true
         }
     }
 )
@@ -275,10 +267,8 @@ const AnnouncementPhoto = Connect.define(
 
 AnnouncementPhoto.belongsTo(Announcement, {
         foreignKey: {
-            announcement_id: {
-                type: DataTypes.UUID,
-                allowNull: false
-            }
+            name: 'announcement_id',
+            allowNull: false
         }
     }
 )
