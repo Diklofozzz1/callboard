@@ -8,6 +8,7 @@ import passport from 'passport';
 import cors from 'cors';
 
 import userController from "./routes/userController.js";
+import uploadFileController from "./routes/uploadFileController.js";
 import Connect from "./models/db_models.js"
 import dotenv from 'dotenv'
 
@@ -25,6 +26,7 @@ app.use(passport.initialize());
 
 // app.use('/', routes);
 app.use('/users', userController);
+app.use('/files', uploadFileController)
 
 const server = http.Server(app)
 
