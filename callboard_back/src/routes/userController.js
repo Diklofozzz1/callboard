@@ -5,9 +5,9 @@ import dotenv from "dotenv";
 
 import passport from '../utils/passport.js';
 import Connect from "../models/db_models.js"
-import {generateMD5} from "../utils/MD5generator.js";
+import {generateMD5} from "../utils/generatorMD5.js";
 import validator from "validator";
-import {mailer} from '../utils/emailController.js'
+import {mailer} from '../utils/emailSender.js'
 
 dotenv.config();
 
@@ -216,7 +216,7 @@ router.get('/verify/:id', async (req, res) => {
                     data: 'User already verified!'
                 })
             } else {
-                user.update({
+                await user.update({
                     verified: true
                 })
             }

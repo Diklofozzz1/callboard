@@ -4,7 +4,7 @@ import passport from 'passport'
 import dotenv from 'dotenv'
 
 import Connect from "../models/db_models.js";
-import {generateMD5} from "./MD5generator.js";
+import {generateMD5} from "./generatorMD5.js";
 
 dotenv.config();
 
