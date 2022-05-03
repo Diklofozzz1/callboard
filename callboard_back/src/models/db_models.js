@@ -261,6 +261,10 @@ const AnnouncementPhoto = Connect.define(
         photo_url: {
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        hash_name: {
+            type: DataTypes.TEXT,
+            allowNull: false
         }
     }
 );
