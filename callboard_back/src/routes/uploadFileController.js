@@ -6,6 +6,7 @@ import passport from '../utils/passport.js';
 import cloudinary from "../utils/cloudinary.js";
 import Connect from "../models/db_models.js";
 import {generateMD5} from "../utils/generatorMD5.js";
+import cors from "cors";
 
 const router = express.Router();
 
@@ -68,6 +69,7 @@ router.post('/avatar_loader', upload.single('avatar'), passport.authenticate("jw
     }
 })
 
+/* Upload adds images. */
 router.post('/adds_photo_loader', upload.array('addsImages', 6), passport.authenticate("jwt"), async (req, res) => {
     try {
         if (req.user === undefined) {
@@ -87,10 +89,10 @@ router.post('/adds_photo_loader', upload.array('addsImages', 6), passport.authen
             }
         })
 
-        const uploadPicture = (item, addsId) => {
+        const uploadPicture = (item, addsId, publicId) => {
             return new Promise((resolve, reject) => {
                 cloudinary.uploader.upload_stream({
-                    public_id: `ad_${addsId}_${generateMD5(Math.random().toString())}`,
+                    public_id: publicId,
                     folder: `user_${userId}/${addsId}`
                 }, (err, result) => {
                     if (res) {
@@ -109,11 +111,14 @@ router.post('/adds_photo_loader', upload.array('addsImages', 6), passport.authen
 
             for (const item of files) {
                 try {
-                    const result = await uploadPicture(item, addsId)
+                    const publicId = `ad_${addsId}_${generateMD5(Math.random().toString())}`
+                    const result = await uploadPicture(item, addsId, publicId)
+
                     if (result) {
                         const photoData = {
                             announcement_id: addsId,
-                            photo_url: result.url
+                            photo_url: result.url,
+                            hash_name: publicId
                         }
                         await Connect.models.AnnouncementPhoto.create(photoData)
 
@@ -143,5 +148,74 @@ router.post('/adds_photo_loader', upload.array('addsImages', 6), passport.authen
         });
     }
 })
+
+
+router.delete('/delete', passport.authenticate("jwt"), async (req, res) => {
+        try {
+            if (req.user === undefined) {
+                res.status(404).json({
+                    status: 'Error',
+                    data: 'User not found!'
+                })
+                return
+            }
+
+            const userId = req.user.id
+            const addsId = req.body.reqId
+            const imgId = req.body.imgId
+
+            const image = await Connect.models.AnnouncementPhoto.findOne({
+                where: {
+                    announcement_id: addsId,
+                    hash_name: imgId
+                }
+            })
+
+            const announcement = await Connect.models.Announcement.findOne({
+                where: {
+                    id: addsId
+                }
+            })
+
+            const creatorId = announcement.get('created_by');
+
+            if (userId !== creatorId.toString()){
+                return res.status(403).json({
+                    status: 'Error',
+                    data: 'You are not a creator of this announcement'
+                })
+            }
+
+            if (image) {
+                await cloudinary.uploader.destroy(`user_${userId}/${addsId}/${imgId}`, async (err, result) => {
+                    if (err || !result) {
+                        return res.status(500).json({
+                            status: 'Error',
+                            data: err || 'Cant upload file!'
+                        })
+                    }
+                })
+                await image.destroy()
+
+                res.status(200).json({
+                    status: 'Success',
+                    data: 'Image success deleted'
+                })
+                return
+            }
+
+            res.status(404).json({
+                status: 'Error',
+                data: 'Image not found'
+            })
+        } catch (err) {
+            res.status(500).json({
+                status: 'Server Error',
+                data: err
+            });
+        }
+    }
+)
+
 
 export default router;
