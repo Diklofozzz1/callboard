@@ -150,7 +150,7 @@ router.post('/adds_photo_loader', upload.array('addsImages', 6), passport.authen
 })
 
 
-router.delete('/delete', passport.authenticate("jwt"), async (req, res) => {
+router.delete('/adds_delete', passport.authenticate("jwt"), async (req, res) => {
         try {
             if (req.user === undefined) {
                 res.status(404).json({
