@@ -199,7 +199,7 @@ const Announcement = Connect.define(
             allowNull: false
         },
         price: {
-            type: DataTypes.TEXT,
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         description: {
