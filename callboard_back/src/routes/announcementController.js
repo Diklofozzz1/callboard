@@ -2,6 +2,7 @@ import express from 'express';
 import {validationResult} from "express-validator";
 import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
+import {Op} from 'sequelize'
 
 import passport from '../utils/passport.js';
 import Connect from "../models/db_models.js"
@@ -13,7 +14,7 @@ const router = express.Router();
 
 /* Announcement creation. */
 router.post('/create', passport.authenticate("jwt"), async (req, res) => {
-    try{
+    try {
         const validationErr = validationResult(req);
 
         if (!validationErr.isEmpty()) {
@@ -24,7 +25,7 @@ router.post('/create', passport.authenticate("jwt"), async (req, res) => {
             return;
         }
 
-        const categoryId = await Connect.models.Category.findOne({where: {title: req.body.title}})
+        const categoryId = await Connect.models.Category.findOne({where: {title: req.body.category}})
 
         const announcementData = {
             title: req.body.title,
@@ -47,7 +48,7 @@ router.post('/create', passport.authenticate("jwt"), async (req, res) => {
             status: 'Success',
             data: announcement
         })
-    }catch (err){
+    } catch (err) {
         res.status(500).json({
             status: 'Server Error',
             data: err
@@ -56,18 +57,18 @@ router.post('/create', passport.authenticate("jwt"), async (req, res) => {
 })
 
 /* Show Announcement with offset */
-router.get('/show_all', async (req,res)=>{
-    try{
+router.get('/show_all', async (req, res) => {
+    try {
         const count = req.query.count;
         const padding = (req.query.padding || 0);
 
-        if ( !count ) {
+        if (!count) {
             const announcement = await Connect.models.Announcement.findAll({
                 order: [
                     ['id', 'DESC'],
                 ],
                 offset: parseInt(padding),
-                where:{
+                where: {
                     complated: false
                 }
             });
@@ -92,7 +93,7 @@ router.get('/show_all', async (req,res)=>{
             status: 'Success',
             data: allAnnouncement
         })
-    }catch (err){
+    } catch (err) {
         res.status(500).json({
             status: 'Server Error',
             data: err
@@ -100,6 +101,90 @@ router.get('/show_all', async (req,res)=>{
     }
 })
 
+router.get('/search_by', async (req, res) => {
+    try {
+        const searchBy = req.query.search
+        const category = req.query.category || ''
+        const priceSort = req.query.price || ''
+        const dateSort = req.query.date || ''
 
+        let whereConds = new Object({
+            where: {
+                complated: false
+            }
+        })
+
+        if (searchBy) {
+            whereConds = {
+                ...whereConds,
+                where: {
+                    ...whereConds.where,
+                    title: {[Op.like]: `%${searchBy}%`}
+                }
+            }
+        }
+
+        if (category) {
+            whereConds = {
+                ...whereConds,
+                include: [{
+                    model: await Connect.models.Category,
+                    as: 'Category',
+                    where: {
+                        id: category
+                    }
+                }]
+            }
+        }
+
+        if (priceSort === 'l') {
+            let order = whereConds.order === undefined ? [] : whereConds.order
+            order = [...order, ['price', 'DESC']]
+            whereConds = {
+                ...whereConds,
+                order: order,
+            }
+        }
+
+        if (priceSort === 'h') {
+            let order = whereConds.order === undefined ? [] : whereConds.order
+            order = [...order, ['price', 'ASC']]
+            whereConds = {
+                ...whereConds,
+                order: order,
+            }
+        }
+
+        if (dateSort === 'l') {
+            let order = whereConds.order === undefined ? [] : whereConds.order
+            order = [...order, ['price', 'DESC']]
+            whereConds = {
+                ...whereConds,
+                order: order,
+            }
+        }
+
+        if (dateSort === 'h') {
+            let order = whereConds.order === undefined ? [] : whereConds.order
+            order = [...order, ['price', 'ASC']]
+            whereConds = {
+                ...whereConds,
+                order: order,
+            }
+        }
+
+        const searchedAnnouncement = await Connect.models.Announcement.findAll(whereConds)
+
+        res.status(200).json({
+            status: 'Success',
+            data: searchedAnnouncement
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: 'Server Error',
+            data: err
+        })
+    }
+})
 
 export default router;
