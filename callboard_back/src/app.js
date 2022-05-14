@@ -10,6 +10,7 @@ import cors from 'cors';
 import userController from "./routes/userController.js";
 import uploadFileController from "./routes/uploadFileController.js";
 import announcementController from "./routes/announcementController.js";
+import commentController from "./routes/commentController.js";
 import Connect from "./models/db_models.js"
 import dotenv from 'dotenv'
 
@@ -30,6 +31,7 @@ app.use(passport.initialize());
 app.use('/users', userController);
 app.use('/files', uploadFileController)
 app.use('/adds', announcementController)
+app.use('/comments', commentController)
 
 const server = http.Server(app)
 
