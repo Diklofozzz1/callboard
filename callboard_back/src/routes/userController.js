@@ -125,12 +125,12 @@ router.get('/show/:id', async (req, res) => {
         });
 
         if (user) {
-            res.status(200).json({
+            return res.status(200).json({
                 status: 'Success',
                 data: user
             })
         } else {
-            res.status(404).json({
+            return res.status(404).json({
                 status: 'Error',
                 data: 'User not found'
             })
