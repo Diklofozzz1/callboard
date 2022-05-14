@@ -7,6 +7,7 @@ import {Op} from 'sequelize'
 import passport from '../utils/passport.js';
 import Connect from "../models/db_models.js"
 import {mailer} from "../utils/emailSender.js";
+import validator from "validator";
 
 dotenv.config();
 
@@ -101,6 +102,7 @@ router.get('/show_all', async (req, res) => {
     }
 })
 
+/* Query filters and search */
 router.get('/search_by', async (req, res) => {
     try {
         const searchBy = req.query.search
@@ -122,6 +124,12 @@ router.get('/search_by', async (req, res) => {
                     title: {[Op.like]: `%${searchBy}%`}
                 }
             }
+        } else {
+            res.status(404).json({
+                status: 'Error',
+                data: `With request ${searchBy} nothing is found`
+            })
+            return
         }
 
         if (category) {
@@ -187,4 +195,59 @@ router.get('/search_by', async (req, res) => {
     }
 })
 
+
+/* Announcement editor */
+router.patch('/edit_add/:id', passport.authenticate("jwt"), async (req, res)=>{
+    try{
+        if (!validator.isUUID(req.params.id)) {
+            res.status(400).json({
+                status: 'Error',
+                data: 'Bad request'
+            })
+        }
+
+        if (req.user === undefined) {
+            res.status(404).json({
+                status: 'Error',
+                data: 'User not found!'
+            })
+            return
+        }
+
+        const userId = req.user.id
+        const addsId = req.params.id
+
+        const announcement = await Connect.models.Announcement.findOne({
+            where: {
+                id: addsId
+            }
+        })
+
+        const creatorId = announcement.get('created_by');
+
+        if (userId !== creatorId.toString()){
+            return res.status(403).json({
+                status: 'Error',
+                data: 'You are not a creator of this announcement'
+            })
+        }
+
+        await announcement.update({
+            ...announcement,
+            ...req.body
+        })
+
+        res.status(200).json({
+            status: 'Success',
+            info: 'Announcement data updated!',
+            data: announcement
+        })
+
+    }catch (err){
+        res.status(500).json({
+            status: 'Server Error',
+            data: err
+        });
+    }
+})
 export default router;
