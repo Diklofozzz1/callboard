@@ -46,7 +46,7 @@ const User = Connect.define(
             allowNull: false
         },
         rating:{
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             allowNull: true
         },
         verified: {
