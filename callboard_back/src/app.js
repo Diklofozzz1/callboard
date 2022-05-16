@@ -13,7 +13,7 @@ import announcementController from "./routes/announcementController.js";
 import commentController from "./routes/commentController.js";
 import Connect from "./models/db_models.js"
 import dotenv from 'dotenv'
-
+import InitSocketIO from "./sockets/index.js";
 
 dotenv.config()
 
@@ -34,6 +34,8 @@ app.use('/adds', announcementController)
 app.use('/comments', commentController)
 
 const server = http.Server(app)
+
+InitSocketIO(server)
 
 server.listen(port, () => {
     console.log(`SERVER LISTENING ON PORT: ${port}`)
