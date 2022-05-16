@@ -6,6 +6,7 @@ import passport from '../utils/passport.js';
 import Connect from "../models/db_models.js"
 import {mailer} from "../utils/emailSender.js";
 import validator from "validator";
+import {ratingController} from "./ratingController.js";
 
 const router = express.Router();
 
@@ -38,7 +39,7 @@ router.post('/create/:id', passport.authenticate("jwt"), async (req, res) => {
             linked_to_user: req.params.id
         }
 
-        if (commentData.score > 5 || commentData.score < 5) {
+        if (commentData.score > 5 || commentData.score < 1) {
             res.status(400).json({
                 status: 'Error',
                 data: 'Score must be between 1 to 5!'
@@ -47,6 +48,8 @@ router.post('/create/:id', passport.authenticate("jwt"), async (req, res) => {
         }
 
         const comment = await Connect.models.Comments.create(commentData)
+
+        await ratingController(commentData.linked_to_user)
 
         mailer(req.user.email, 'Your comment is created! [Callboard App, NO REPLY!]', `Comment to ${commentData.linked_to_user} with title ${commentData.title} is created!`)
 
@@ -181,6 +184,7 @@ router.patch('/edit/:id', passport.authenticate("jwt"), async (req, res) => {
     }
 })
 
+/* Comment delete */
 router.delete('/delete/:id', passport.authenticate("jwt"), async (req, res)=>{
     try{
         if (!validator.isUUID(req.params.id)) {
@@ -218,9 +222,11 @@ router.delete('/delete/:id', passport.authenticate("jwt"), async (req, res)=>{
 
         await comment.destroy()
 
+        await ratingController(comment.get('linked_to_user'))
+
         res.status(200).json({
             status: 'Success',
-            data: 'User deleted!'
+            data: 'Comment deleted!'
         })
     }catch (err){
         res.status(500).json({
