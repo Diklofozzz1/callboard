@@ -216,16 +216,17 @@ const Announcement = Connect.define(
             allowNull: false
         },
         begin: {
-            type: DataTypes.DATEONLY,
+            type: 'TIMESTAMP',
             allowNull: true
         },
         end: {
-            type: DataTypes.DATEONLY,
+            type: 'TIMESTAMP',
             allowNull: true
         },
         complated: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: false,
+            defaultValue: false
         },
 
     }
