@@ -34,8 +34,8 @@ router.post('/create', passport.authenticate("jwt"), async (req, res) => {
             description: req.body.description,
             address: req.body.address,
             is_auction: req.body.is_auction,
-            begin: req.body?.begin,
-            end: req.body?.end,
+            begin: new Date(req.body?.begin * 1000),
+            end: new Date(req.body?.end * 1000),
             complated: req.body.complated,
             created_by: req.user.id,
             category: categoryId?.id
