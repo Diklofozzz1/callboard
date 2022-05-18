@@ -73,7 +73,8 @@ Chat.belongsTo(User, {
         foreignKey: {
             name: 'user1_id',
             allowNull: false
-        }
+        },
+        onDelete: 'cascade'
     }
 )
 
@@ -81,7 +82,8 @@ Chat.belongsTo(User, {
         foreignKey: {
             name: 'user2_id',
             allowNull: false
-        }
+        },
+        onDelete: 'cascade'
     }
 )
 
@@ -108,7 +110,8 @@ Message.belongsTo(User, {
         foreignKey: {
             name: 'user_id',
             allowNull: false
-        }
+        },
+        onDelete: 'cascade'
     }
 )
 
@@ -116,7 +119,8 @@ Message.belongsTo(Chat, {
         foreignKey: {
             name: 'chat_id',
             allowNull: false
-        }
+        },
+        onDelete: 'cascade'
     }
 )
 
@@ -151,7 +155,8 @@ Comments.belongsTo(User, {
         foreignKey: {
             name: 'created_by',
             allowNull: false
-        }
+        },
+        onDelete: 'cascade'
     }
 )
 
@@ -159,7 +164,8 @@ Comments.belongsTo(User, {
         foreignKey: {
             name: 'linked_to_user',
             allowNull: false
-        }
+        },
+        onDelete: 'cascade'
     }
 )
 
@@ -223,6 +229,11 @@ const Announcement = Connect.define(
             type: 'TIMESTAMP',
             allowNull: true
         },
+        last_price: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            defaultValue: 0
+        },
         complated: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
@@ -233,10 +244,20 @@ const Announcement = Connect.define(
 );
 
 Announcement.belongsTo(User, {
+        foreignKey:{
+            name: 'last_payer',
+            allowNull: true
+        },
+        onDelete: 'cascade'
+    }
+)
+
+Announcement.belongsTo(User, {
         foreignKey: {
             name: 'created_by',
             allowNull: false
-        }
+        },
+        onDelete: 'cascade'
     }
 )
 
@@ -244,7 +265,8 @@ Announcement.belongsTo(Category, {
         foreignKey: {
             name: 'category',
             allowNull: true
-        }
+        },
+        onDelete: 'cascade'
     }
 )
 
@@ -275,7 +297,8 @@ AnnouncementPhoto.belongsTo(Announcement, {
         foreignKey: {
             name: 'announcement_id',
             allowNull: false
-        }
+        },
+        onDelete: 'cascade'
     }
 )
 
