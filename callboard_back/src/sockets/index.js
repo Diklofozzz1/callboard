@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import dotenv from "dotenv";
-import {auctionFinder} from "./auction.handler.js";
+import {auctionFinder, newPrice} from "./auction.handler.js";
 
 dotenv.config();
 
@@ -15,6 +15,13 @@ export default function InitSocketIO(server){
     io.on('connection', async (socket)=>{
         try{
             socket.on('auction: finder', async ()=>{await auctionFinder(socket)})
-        }catch (err){}
+            socket.on('auction: price_updater', async (data)=>{await newPrice(socket, data)})
+        }catch (err){
+            socket.emit('socket: err', {
+                    status: 'Error',
+                    data: err,
+                }
+            )
+        }
     })
 }
