@@ -14,6 +14,7 @@ import commentController from "./routes/commentController.js";
 import Connect from "./models/db_models.js"
 import dotenv from 'dotenv'
 import InitSocketIO from "./sockets/index.js";
+import messageHistoryController from "./routes/messageHistoryController.js";
 
 dotenv.config()
 
@@ -32,6 +33,7 @@ app.use('/users', userController);
 app.use('/files', uploadFileController)
 app.use('/adds', announcementController)
 app.use('/comments', commentController)
+app.use('/chats', messageHistoryController)
 
 const server = http.Server(app)
 
