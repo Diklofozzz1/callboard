@@ -58,8 +58,6 @@ export const auctionFinder = async (socket) => {
 
 export const newPrice = async (socket, data) => {
     try{
-        console.log(data.auction_id)
-
         const auction = await Connect.models.Announcement.findOne({
             where: {
                 id: data.auction_id,
