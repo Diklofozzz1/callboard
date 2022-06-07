@@ -1,24 +1,22 @@
 import React, {useState} from "react";
 import {Button} from "rsuite";
 
-import 'rsuite/dist/rsuite.min.css';
+
+
 import './MainPageStyle.css'
+import RegModal from "../../components/RegModal/RegModal";
 
 export default function MainPage(){
-    const [clicked, setClicked] = useState(false)
-
-    const buttonChanger = () => {
-        if(clicked){
-            setClicked(false)
-            return
-        }
-        setClicked(true)
-    }
+    const [regModal, openRegModal] = useState(false)
 
     return (
-        <div className={'style'} onClick={buttonChanger}>
-            <Button color="yellow" appearance="" loading={clicked}>
-                Hello
+        <div className={'style'}>
+                <RegModal
+                    open={regModal}
+                    onClose={()=>{openRegModal(false)}}
+                />
+            <Button color="yellow" appearance="primary" onClick={()=>{openRegModal(true)}}>
+                Reg
             </Button>
         </div>
     );
