@@ -1,0 +1,12 @@
+.header-style{
+    text-align: center;
+}
+.modal-root{
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+.reg-link{
+    display: flex;
+    flex-direction: column;
+}
