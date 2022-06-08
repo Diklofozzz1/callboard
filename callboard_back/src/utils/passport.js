@@ -60,8 +60,6 @@ passport.use(new LocalStrategy({
                 return;
             }
 
-            console.log(user.get('password'));
-
             done(null, false);
         } catch (err) {
             done(err, false);
