@@ -4,19 +4,20 @@ import {Button} from "rsuite";
 
 
 import './MainPageStyle.css'
-import RegModal from "../../components/RegModal/RegModal";
+import LogModal from "../../components/LoginModal/LogModal";
+
 
 export default function MainPage(){
-    const [regModal, openRegModal] = useState(false)
+    const [logModal, openLogModal] = useState(false)
 
     return (
         <div className={'style'}>
-                <RegModal
-                    open={regModal}
-                    onClose={()=>{openRegModal(false)}}
+                <LogModal
+                    open={logModal}
+                    onClose={()=>{openLogModal(false)}}
                 />
-            <Button color="yellow" appearance="primary" onClick={()=>{openRegModal(true)}}>
-                Reg
+            <Button color="yellow" appearance="primary" onClick={()=>{openLogModal(true)}}>
+                log
             </Button>
         </div>
     );
