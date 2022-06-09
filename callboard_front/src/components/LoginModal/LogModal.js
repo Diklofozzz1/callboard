@@ -5,16 +5,18 @@ import {
     Form,
     Schema,
     InputGroup,
+    Message,
+    useToaster
 } from 'rsuite';
-
-import RegModal from "../../components/RegModal/RegModal";
 
 import CheckIcon from '@rsuite/icons/Check';
 import CloseIcon from '@rsuite/icons/Close';
 
-import { ReactComponent as Logo } from '../../misc/img/logo.svg';
-
 import './LogModalStyle.css'
+
+import {Login} from "../../api/auth/auth.services";
+import RegModal from "../../components/RegModal/RegModal";
+import { ReactComponent as Logo } from '../../misc/img/logo.svg';
 
 const {StringType} = Schema.Types
 
@@ -25,7 +27,6 @@ const model = Schema.Model({
     password: StringType().isRequired('Это необходимое поле!')
         .minLength(8, 'Необходимо минимум 8 символов')
 })
-
 
 function TextField(props) {
     const { name, label, accepter, ...rest } = props;
@@ -59,6 +60,7 @@ function CustomTextField(props) {
 
 export default function LogModal(props){
     const [regModal, openRegModal] = useState(false)
+    const [uploading, setUploading] = useState(false)
     const [formError, setFormError] = useState({})
     const [formValue, setFormValue] = useState({
         email: '',
@@ -70,9 +72,48 @@ export default function LogModal(props){
         || formValue.password.length === 0
 
 
-    //---------------------------------------------todo: api insert!
-    const loginHandler = () => {
+    const messageHandler = (message, type) => (
+        <Message showIcon type={type} closable={true} duration={3000}>
+            {message}
+        </Message>
+    )
 
+    const toaster = useToaster()
+
+    const token = localStorage.getItem('token')
+    const checkAuth = () => {
+        if (token !== null){
+            toaster.push(messageHandler('Вы уже вошли в систему!', 'warning'))
+            return
+        }
+        props.onClose(true)
+        toaster.remove()
+        openRegModal(true)
+    }
+
+    const loginHandler = async () => {
+        setUploading(true)
+        Login(formValue).then(res=>{
+            if(res.token !== undefined){
+                localStorage.setItem('token', res.token)
+                toaster.push(messageHandler('Вы вошли в систему!', 'success'))
+                setUploading(false)
+                props.onClose(true)
+            }
+        }).catch((err) => {
+            if(err.response?.status === 404){
+                toaster.push(messageHandler('Мы не смогли найти такого пользователя!', 'warning'))
+                setUploading(false)
+                return
+            }
+            if(err.response?.status === 401){
+                toaster.push(messageHandler('Вы ввели не верные данные!', 'warning'))
+                setUploading(false)
+                return
+            }
+            toaster.push(messageHandler('Мы не можем установить соединение с сервером!', 'error'))
+            setUploading(false)
+        })
     }
 
     return(
@@ -81,7 +122,7 @@ export default function LogModal(props){
                 open={regModal}
                 onClose={()=>{openRegModal(false)}}
             />
-            <Modal className={'modal-root'} open={props.open} onClose={props.onClose} overflow={false} backdrop={"static"}>
+            <Modal className={'modal-root'} open={props.open} onClose={()=>{props.onClose(); toaster.remove()}} overflow={false} backdrop={"static"}>
                 <Modal.Header className={'header-style'}>
                     <Logo style={{width: "4em"}}/>
                     <Modal.Title><b>Добро пожаловать!</b></Modal.Title>
@@ -89,23 +130,23 @@ export default function LogModal(props){
                 </Modal.Header>
                 <Modal.Body>
                     <Form model={model} fluid onChange={setFormValue} formValue={formValue} onCheck={setFormError}>
-                        <TextField name="email" label="Ваша электронная почта" fieldError={formError}/>
-                        <CustomTextField name="password" label="Пароль" fieldError={formError} autoComplete="off"/>
+                        <TextField name="email" label="Ваша электронная почта" />
+                        <CustomTextField name="password" label="Пароль"  autoComplete="off"/>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <div className={'header-style'}>
-                        <Button onClick={props.onClose} appearance="primary" disabled={logInAvailable}>
+                        <Button onClick={loginHandler} appearance="primary" disabled={logInAvailable} loading={uploading}>
                             Войти
                         </Button>
-                        <Button onClick={props.onClose} appearance="subtle">
+                        <Button onClick={()=>{props.onClose(); toaster.remove()}} appearance="subtle">
                             Отмена
                         </Button>
                     </div>
                     <hr/>
                     <div className={'reg-link'}>
                         <Modal.Title className={'header-style'}><b>Еще не зарегестрированы?</b></Modal.Title>
-                        <Button appearance="link" onClick={()=>{openRegModal(true)}}><b>Тогда присоединяйтесь!</b></Button>
+                        <Button appearance="link" onClick={checkAuth}><b>Тогда присоединяйтесь!</b></Button>
                     </div>
                 </Modal.Footer>
             </Modal>
