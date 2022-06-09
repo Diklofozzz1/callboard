@@ -12,7 +12,7 @@ export const Login = async (props) => {
             password: props.password
         }
     })
-    return {token: res.data.token}
+    return {token: res.data.data.token}
 }
 
 export const Logout = () => {

@@ -8,10 +8,12 @@ export const Registration = async (props) => {
         url: `${API_URL}/users/create`,
         data:{
             first_name: props.first_name,
-            last_name: props.first_name,
-            phone_number: props.first_name,
-            email: props.first_name,
-            password: props.first_name,
+            last_name: props.last_name,
+            phone_number: props.phone_number,
+            email: props.email,
+            password: props.password,
+            photo_url:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/HONDA_ASIMO.jpg/640px-HONDA_ASIMO.jpg",
+            rating:0
         }
     })
     return {Status: res.data.status}
