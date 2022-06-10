@@ -1,0 +1,24 @@
+.card-style{
+    margin: 10px;
+}
+.custom-slider{
+    max-height: 300px !important;
+}
+.non-touchable{
+    user-select: none;
+}
+.non-drag-img{
+    -webkit-user-drag: none;
+}
+.description{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.auct-status{
+    display: flex;
+    flex-direction: row;
+}
+.card-cursor{
+    cursor: pointer;
+}
