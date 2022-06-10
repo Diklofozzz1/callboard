@@ -1,4 +1,11 @@
+.root-page{
+    width:100vw
+}
 .style{
     padding: 20px;
     text-align: center;
 }
+.carousel-style{
+    padding: 0 10vw 0 10vw;
+}
+
