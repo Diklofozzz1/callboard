@@ -70,7 +70,8 @@ router.get('/show_all', async (req, res) => {
                 ],
                 offset: parseInt(padding),
                 where: {
-                    complated: false
+                    complated: false,
+                    is_auction: false
                 }
             });
 
@@ -87,7 +88,11 @@ router.get('/show_all', async (req, res) => {
                 ['createdAt', 'DESC'],
             ],
             limit: parseInt(count),
-            offset: parseInt(padding)
+            offset: parseInt(padding),
+            where: {
+                complated: false,
+                is_auction: false
+            }
         })
 
         res.status(200).json({
@@ -102,13 +107,96 @@ router.get('/show_all', async (req, res) => {
     }
 })
 
-/* Query filters and search */
+router.get('/announcement/:id', async (req, res)=>{
+    try {
+        if (!validator.isUUID(req.params.id)) {
+            res.status(400).json({
+                status: 'Error',
+                data: 'Bad request'
+            })
+        }
+
+        let announcement = await Connect.models.Announcement.findOne({
+            where:{
+                id: req.params.id
+            }
+        })
+
+        const photos = await Connect.models.AnnouncementPhoto.findAll({
+            where:{
+                announcement_id: req.params.id
+            }
+        })
+
+        if(announcement.length === 0){
+            res.status(404).json({
+                status: 'Error',
+                data: `Announcement not found`
+            })
+            return
+        }
+
+        announcement.dataValues.photos = photos
+
+        res.status(200).json({
+            status: 'Success',
+            data: announcement
+        })
+
+    }catch (err){
+        res.status(500).json({
+            status: 'Server Error',
+            data: err
+        })
+    }
+})
+
+//active aucts
+router.get('/active_auct', async (req, res)=>{
+    try {
+        let allAuction = await Connect.models.Announcement.findAll({
+            where:{
+                complated: false,
+                is_auction: true
+            }
+        })
+
+        let act_auct =[]
+
+        for(let item of allAuction){
+            if(item.begin < Date.now() && item.end > Date.now()){
+                item.dataValues.photos = await Connect.models.AnnouncementPhoto.findAll({
+                    where: {
+                        announcement_id: item.id
+                    }
+                })
+                act_auct.push(item)
+            }
+
+        }
+
+        res.status(200).json({
+            status: 'Success',
+            data: act_auct
+        })
+
+    }catch (err){
+        res.status(500).json({
+            status: 'Server Error',
+            data: err
+        })
+    }
+})
+
+//search router
 router.get('/search_by', async (req, res) => {
     try {
         const searchBy = req.query.search
         const category = req.query.category || ''
         const priceSort = req.query.price || ''
         const dateSort = req.query.date || ''
+        const typeSort = req.query.type || ''
+        const userIdSort = req.query.user_id || ''
 
         let whereConds = new Object({
             where: {
@@ -124,12 +212,6 @@ router.get('/search_by', async (req, res) => {
                     title: {[Op.like]: `%${searchBy}%`}
                 }
             }
-        } else {
-            res.status(404).json({
-                status: 'Error',
-                data: `With request ${searchBy} nothing is found`
-            })
-            return
         }
 
         if (category) {
@@ -142,6 +224,26 @@ router.get('/search_by', async (req, res) => {
                         id: category
                     }
                 }]
+            }
+        }
+
+        if (typeSort) {
+            whereConds = {
+                ...whereConds,
+                where: {
+                    ...whereConds.where,
+                    is_auction: typeSort
+                }
+            }
+        }
+
+        if (userIdSort) {
+            whereConds = {
+                ...whereConds,
+                where: {
+                    ...whereConds.where,
+                    created_by: userIdSort
+                }
             }
         }
 
@@ -181,7 +283,25 @@ router.get('/search_by', async (req, res) => {
             }
         }
 
-        const searchedAnnouncement = await Connect.models.Announcement.findAll(whereConds)
+        let searchedAnnouncement = await Connect.models.Announcement.findAll(whereConds)
+
+        for(let item of searchedAnnouncement){
+            item.dataValues.photos = await Connect.models.AnnouncementPhoto.findAll({
+                where: {
+                    announcement_id: item.id
+                }
+            })
+        }
+
+        console.log(searchedAnnouncement)
+
+        if(searchedAnnouncement.length === 0){
+            res.status(404).json({
+                status: 'Error',
+                data: `With such request nothing is found`
+            })
+            return
+        }
 
         res.status(200).json({
             status: 'Success',
