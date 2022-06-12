@@ -15,10 +15,6 @@ export const Login = async (props) => {
     return {token: res.data.data.token}
 }
 
-export const Logout = () => {
-    localStorage.removeItem('token')
-}
-
 export const ShowMe = async () => {
     const res = await axios({
         method: 'GET',
