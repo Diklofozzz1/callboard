@@ -1,12 +1,17 @@
-import React, {useState} from "react";
-import {Button} from "rsuite";
+import React, {useEffect, useState} from "react";
+import {
+    Header,
+    Content
+} from "rsuite";
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 import './MainPageStyle.css'
-import LogModal from "../../components/LoginModal/LogModal";
+import CustomHeader from "../../components/Header/CustomHeader";
 import Card from "../../components/Card/Card";
+import SearchLine from "../../components/SearchLine/SearchLine";
+import {ActiveAuctions} from "../../api/announcement.api";
 
 
 const responsive = {
@@ -28,41 +33,56 @@ const responsive = {
 };
 
 export default function MainPage(){
-    const [logModal, openLogModal] = useState(false)
+    const [auctionList, setAuctionList] = useState([])
+
+    useEffect(()=>{
+        ActiveAuctions().then(res=>{
+            setAuctionList(res.data)
+        })
+    }, [])
 
     return (
         <div className={'root-page'}>
-            <div className={'style'}>
-                <LogModal
-                    open={logModal}
-                    onClose={()=>{openLogModal(false)}}
-                />
-                <Button color="yellow" appearance="primary" onClick={()=>{openLogModal(true)}}>
-                    log
-                </Button>
+            <Header>
+                <CustomHeader/>
+            </Header>
+            <div >
+                <h3 className={'text-style'}>
+                    Поиск по доске объявлений
+                </h3>
             </div>
+            <div>
+                <SearchLine/>
+            </div>
+            <div>
+                <div className={'hr-style'}>
+                    <hr/>
+                </div>
+                <div className={'hr-style'}>
+                    <h3>
+                        Активные аукционы
+                    </h3>
+                </div>
+                <div className={'carousel-style'}>
+                    <Carousel
+                        responsive={responsive}
+                        swipeable={true}
+                        draggable={true}
+                        showDots={false}
+                        infinite={true}
+                        autoPlay={false}
+                        autoPlaySpeed={15000}
+                        arrows={false}
+                    >
+                        {auctionList.map(data=>(
+                            <div key={`${data.id}_1`}><Card label={data.title} price={data.price} isAuct={data.is_auction} isActive={data.complated} photos={data.photos} id={data.id}/></div>
+                        ))}
 
-            <div className={'carousel-style'}>
-                <Carousel
-                    responsive={responsive}
-                    swipeable={true}
-                    draggable={true}
-                    showDots={false}
-                    infinite={true}
-                    autoPlay={false}
-                    autoPlaySpeed={15000}
-                    arrows={false}
-                >
-                    <div><Card label={'Header'} price={'30000'}/></div>
-                    <div><Card label={'Header'} price={'30000'}/></div>
-                    <div><Card label={'Header'} price={'30000'}/></div>
-                    <div><Card label={'Header'} price={'30000'}/></div>
-                    <div><Card label={'Header'} price={'30000'}/></div>
-                    <div><Card label={'Header'} price={'30000'}/></div>
-                    <div><Card label={'Header'} price={'30000'}/></div>
-                    <div><Card label={'Header'} price={'30000'}/></div>
-                    <div><Card label={'Header'} price={'30000'}/></div>
-                </Carousel>
+                    </Carousel>
+                </div>
+                <div className={'hr-style'}>
+                    <hr/>
+                </div>
             </div>
         </div>
     );

@@ -1,11 +1,14 @@
 .root-page{
+    /*background-color: #282c34;*/
     width:100vw
 }
-.style{
-    padding: 20px;
-    text-align: center;
-}
 .carousel-style{
+    /*background-color: darkseagreen;*/
     padding: 0 10vw 0 10vw;
 }
-
+.text-style{
+    padding: 5px 15vw 5px 15vw;
+}
+.hr-style{
+    padding: 0 15vw 0 15vw;
+}
