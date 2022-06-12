@@ -99,10 +99,38 @@ router.post('/login', passport.authenticate('local'), async (req, res) => {
 
 /* Show logined User info from JWT payload. */
 router.get("/me", passport.authenticate("jwt"), async (req, res) => {
-    res.status(200).json({
-        status: "Success",
-        data: req.user
-    })
+        try {
+        if (req.user === undefined) {
+            res.status(404).json({
+                status: 'Error',
+                data: 'Cant find client data'
+            })
+            return
+        }
+
+        const user = await Connect.models.User.findOne({
+            where: {
+                id: req.user.id
+            }
+        });
+
+        if (user) {
+            return res.status(200).json({
+                status: 'Success',
+                data: user
+            })
+        } else {
+            return res.status(404).json({
+                status: 'Error',
+                data: 'User not found'
+            })
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: 'Server Error',
+            data: err
+        });
+    }
 })
 
 /* Show User info by ID. */
