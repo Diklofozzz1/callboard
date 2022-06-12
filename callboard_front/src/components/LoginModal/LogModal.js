@@ -17,6 +17,7 @@ import './LogModalStyle.css'
 import {Login} from "../../api/auth/auth.services";
 import RegModal from "../../components/RegModal/RegModal";
 import { ReactComponent as Logo } from '../../misc/img/logo.svg';
+import useAuth from "../../useAuthHook/useAuth";
 
 const {StringType} = Schema.Types
 
@@ -91,22 +92,24 @@ export default function LogModal(props){
         openRegModal(true)
     }
 
+    const {login, error} = useAuth()
+
     const loginHandler = async () => {
         setUploading(true)
-        Login(formValue).then(res=>{
-            if(res.token !== undefined){
-                localStorage.setItem('token', res.token)
+        login(formValue).then(res=>{
+            if(res){
                 toaster.push(messageHandler('Вы вошли в систему!', 'success'))
                 setUploading(false)
                 props.onClose(true)
             }
+
         }).catch((err) => {
-            if(err.response?.status === 404){
+            if(err === 404){
                 toaster.push(messageHandler('Мы не смогли найти такого пользователя!', 'warning'))
                 setUploading(false)
                 return
             }
-            if(err.response?.status === 401){
+            if(err === 401){
                 toaster.push(messageHandler('Вы ввели не верные данные!', 'warning'))
                 setUploading(false)
                 return
