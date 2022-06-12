@@ -1,0 +1,27 @@
+.root-style{
+    background-color: blueviolet;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px 15vw 5px 15vw;
+}
+.logo-style{
+    background-color: #61dafb;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    cursor: pointer;
+    user-select: none;
+}
+.style-no-auth{
+    background-color: #61dafb;
+    display: flex;
+    justify-content: end;
+}
+.style-auth{
+    background-color: #61dafb;
+    display: flex;
+    justify-content: end;
+    padding-top: 5px;
+}
+

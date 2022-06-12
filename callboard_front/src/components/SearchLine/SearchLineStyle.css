@@ -1,0 +1,10 @@
+.root{
+    /*background-color: blueviolet;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 15vw 10px 15vw;
+}
+.input-style{
+    background-color: white;
+}
