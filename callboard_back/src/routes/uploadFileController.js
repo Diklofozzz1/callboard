@@ -70,7 +70,7 @@ router.post('/avatar_loader', upload.single('avatar'), passport.authenticate("jw
 })
 
 /* Upload adds images. */
-router.post('/adds_photo_loader', upload.array('addsImages', 6), passport.authenticate("jwt"), async (req, res) => {
+router.post('/adds_photo_loader/:id', upload.array('addsImages', 6), passport.authenticate("jwt"), async (req, res) => {
     try {
         if (req.user === undefined) {
             res.status(404).json({
@@ -85,7 +85,8 @@ router.post('/adds_photo_loader', upload.array('addsImages', 6), passport.authen
 
         const adds = await Connect.models.Announcement.findOne({
             where: {
-                created_by: userId
+                created_by: userId,
+                id: req.params.id
             }
         })
 
