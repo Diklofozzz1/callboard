@@ -4,13 +4,16 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import 'rsuite/dist/rsuite.min.css';
 
 import MainPage from "./pages/MainPage/MainPage";
+import {AuthProvider} from "./useAuthHook/useAuth";
 
 function App() {
     return(
       <BrowserRouter>
-          <Routes>
-              <Route path='' element={<MainPage/>}/>
-          </Routes>
+          <AuthProvider>
+              <Routes>
+                  <Route path='' element={<MainPage/>}/>
+              </Routes>
+          </AuthProvider>
       </BrowserRouter>
     )
 }
