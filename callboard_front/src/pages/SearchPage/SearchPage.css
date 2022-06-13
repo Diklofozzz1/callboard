@@ -1,0 +1,18 @@
+.root-page{
+    /*background-color: #282c34;*/
+    width:100vw
+}
+.carousel-style{
+    /*background-color: darkseagreen;*/
+    padding: 0 10vw 0 10vw;
+}
+.text-style{
+    padding: 5px 15vw 5px 15vw;
+}
+.hr-style{
+    padding: 0 19vw 0 19vw;
+}
+/*.card-position{*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*}*/
