@@ -22,7 +22,7 @@ export default function CustomHeader(props){
     return(
         <div className={'root-style'}>
             <div className={'logo-style'} onClick={()=>{navigate('/')}}>
-                <Logo className={'logo'} style={{width: "3em"}}/>
+                <div className={'logo'}><Logo style={{width: "3em"}}/></div>
                 <h3 className={'logo-text'}>SalePlace</h3>
             </div>
             {
