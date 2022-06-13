@@ -197,6 +197,8 @@ router.get('/search_by', async (req, res) => {
         const dateSort = req.query.date || ''
         const typeSort = req.query.type || ''
         const userIdSort = req.query.user_id || ''
+        const count = req.query.count;
+        const padding = (req.query.padding || 0);
 
         let whereConds = new Object({
             where: {
@@ -283,17 +285,22 @@ router.get('/search_by', async (req, res) => {
             }
         }
 
-        let searchedAnnouncement = await Connect.models.Announcement.findAll(whereConds)
+        let searchedAnnouncement = await Connect.models.Announcement.findAll({
+            where:{
+                ...whereConds.where,
+                complated: false
+            },
+            limit: parseInt(count),
+            offset: parseInt(padding)
+        })
 
         for(let item of searchedAnnouncement){
             item.dataValues.photos = await Connect.models.AnnouncementPhoto.findAll({
                 where: {
                     announcement_id: item.id
-                }
+                },
             })
         }
-
-        console.log(searchedAnnouncement)
 
         if(searchedAnnouncement.length === 0){
             res.status(404).json({
