@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
     Header,
-    Content
 } from "rsuite";
 
 import Carousel from "react-multi-carousel";
@@ -75,9 +74,8 @@ export default function MainPage(){
                         arrows={false}
                     >
                         {auctionList.map(data=>(
-                            <div key={`${data.id}_1`}><Card label={data.title} price={data.price} isAuct={data.is_auction} isActive={data.complated} photos={data.photos} id={data.id}/></div>
+                            <div key={`${data.id}_1`}><Card cardType={1} label={data.title} price={data.price} isAuct={data.is_auction} isActive={!data.complated} photos={data.photos} id={data.id}/></div>
                         ))}
-
                     </Carousel>
                 </div>
                 <div className={'hr-style'}>

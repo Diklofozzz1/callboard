@@ -92,7 +92,7 @@ export default function LogModal(props){
         openRegModal(true)
     }
 
-    const {login, error} = useAuth()
+    const {login} = useAuth()
 
     const loginHandler = async () => {
         setUploading(true)
