@@ -5,6 +5,7 @@ import 'rsuite/dist/rsuite.min.css';
 
 import MainPage from "./pages/MainPage/MainPage";
 import {AuthProvider} from "./useAuthHook/useAuth";
+import SearchPage from "./pages/SearchPage/SearchPage";
 
 function App() {
     return(
@@ -12,6 +13,7 @@ function App() {
           <AuthProvider>
               <Routes>
                   <Route path='' element={<MainPage/>}/>
+                  <Route path='/search' element={<SearchPage/>}/>
               </Routes>
           </AuthProvider>
       </BrowserRouter>
