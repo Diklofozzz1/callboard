@@ -23,8 +23,8 @@ export const Search = async (props) => {
                 type: props?.type,
                 count: props?.count,
                 padding: props?.padding
-                }
             }
-        )
+        }
+    )
     return res
 }

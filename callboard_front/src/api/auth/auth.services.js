@@ -1,13 +1,14 @@
 import axios from "axios";
 
 import authHeader from "./auth.header";
+
 const API_URL = process.env.REACT_APP_API_URL
 
 export const Login = async (props) => {
     const res = await axios({
         method: 'POST',
         url: `${API_URL}/users/login`,
-        data:{
+        data: {
             email: props.email,
             password: props.password
         }
@@ -19,7 +20,8 @@ export const ShowMe = async () => {
     const res = await axios({
         method: 'GET',
         url: `${API_URL}/users/me`,
-        header: authHeader()
+        headers: authHeader()
     })
-    return res.data
+
+    return res.data.data
 }
