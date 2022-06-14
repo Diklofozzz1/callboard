@@ -16,7 +16,7 @@ import './LogModalStyle.css'
 
 import {Login} from "../../api/auth/auth.services";
 import RegModal from "../../components/RegModal/RegModal";
-import { ReactComponent as Logo } from '../../misc/img/logo.svg';
+import {ReactComponent as Logo} from '../../misc/img/logo.svg';
 import useAuth from "../../useAuthHook/useAuth";
 
 const {StringType} = Schema.Types
@@ -30,7 +30,7 @@ const model = Schema.Model({
 })
 
 function TextField(props) {
-    const { name, label, accepter, ...rest } = props;
+    const {name, label, accepter, ...rest} = props;
     return (
         <Form.Group controlId={`${name}-3`}>
             <Form.Control placeholder={label} errorPlacement={'bottomEnd'} name={name} accepter={accepter} {...rest} />
@@ -39,7 +39,7 @@ function TextField(props) {
 }
 
 function CustomTextField(props) {
-    const { name, label, accepter, ...rest} = props;
+    const {name, label, accepter, ...rest} = props;
     const [visible, setVisible] = React.useState(false);
 
 
@@ -48,18 +48,19 @@ function CustomTextField(props) {
     };
 
     return (
-        <Form.Group controlId={`${name}-3`} >
+        <Form.Group controlId={`${name}-3`}>
             <InputGroup style={{width: "100%"}}>
-                <Form.Control placeholder={label} errorPlacement={'bottomEnd'} name={name} type={visible ? 'text' : 'password'} accepter={accepter} {...rest} />
+                <Form.Control placeholder={label} errorPlacement={'bottomEnd'} name={name}
+                              type={visible ? 'text' : 'password'} accepter={accepter} {...rest} />
                 <InputGroup.Addon onClick={handleChange}>
-                    {visible ? <CheckIcon /> : <CloseIcon />}
+                    {visible ? <CheckIcon/> : <CloseIcon/>}
                 </InputGroup.Addon>
             </InputGroup>
         </Form.Group>
     );
 }
 
-export default function LogModal(props){
+export default function LogModal(props) {
     const [regModal, openRegModal] = useState(false)
     const [uploading, setUploading] = useState(false)
     const [formError, setFormError] = useState({})
@@ -83,7 +84,7 @@ export default function LogModal(props){
 
     const token = localStorage.getItem('token')
     const checkAuth = () => {
-        if (token !== null){
+        if (token !== null) {
             toaster.push(messageHandler('Вы уже вошли в систему!', 'warning'))
             return
         }
@@ -92,24 +93,24 @@ export default function LogModal(props){
         openRegModal(true)
     }
 
-    const {login} = useAuth()
+    const {login, me} = useAuth()
 
     const loginHandler = async () => {
         setUploading(true)
-        login(formValue).then(res=>{
-            if(res){
+        login(formValue).then(res => {
+            if (res) {
                 toaster.push(messageHandler('Вы вошли в систему!', 'success'))
                 setUploading(false)
                 props.onClose(true)
-            }
 
+            }
         }).catch((err) => {
-            if(err === 404){
+            if (err === 404) {
                 toaster.push(messageHandler('Мы не смогли найти такого пользователя!', 'warning'))
                 setUploading(false)
                 return
             }
-            if(err === 401){
+            if (err === 401) {
                 toaster.push(messageHandler('Вы ввели не верные данные!', 'warning'))
                 setUploading(false)
                 return
@@ -119,13 +120,18 @@ export default function LogModal(props){
         })
     }
 
-    return(
+    return (
         <div>
             <RegModal
                 open={regModal}
-                onClose={()=>{openRegModal(false)}}
+                onClose={() => {
+                    openRegModal(false)
+                }}
             />
-            <Modal className={'modal-root'} open={props.open} onClose={()=>{props.onClose(); toaster.remove()}} overflow={false} backdrop={"static"}>
+            <Modal className={'modal-root'} open={props.open} onClose={() => {
+                props.onClose();
+                toaster.remove()
+            }} overflow={false} backdrop={"static"}>
                 <Modal.Header className={'header-style'}>
                     <Logo style={{width: "4em"}}/>
                     <Modal.Title><b>Добро пожаловать!</b></Modal.Title>
@@ -133,16 +139,20 @@ export default function LogModal(props){
                 </Modal.Header>
                 <Modal.Body>
                     <Form model={model} fluid onChange={setFormValue} formValue={formValue} onCheck={setFormError}>
-                        <TextField name="email" label="Ваша электронная почта" />
-                        <CustomTextField name="password" label="Пароль"  autoComplete="off"/>
+                        <TextField name="email" label="Ваша электронная почта"/>
+                        <CustomTextField name="password" label="Пароль" autoComplete="off"/>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <div className={'header-style'}>
-                        <Button onClick={loginHandler} appearance="primary" disabled={logInAvailable} loading={uploading}>
+                        <Button onClick={loginHandler} appearance="primary" disabled={logInAvailable}
+                                loading={uploading}>
                             Войти
                         </Button>
-                        <Button onClick={()=>{props.onClose(); toaster.remove()}} appearance="subtle">
+                        <Button onClick={() => {
+                            props.onClose();
+                            toaster.remove()
+                        }} appearance="subtle">
                             Отмена
                         </Button>
                     </div>

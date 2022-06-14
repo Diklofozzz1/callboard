@@ -12,7 +12,7 @@ import {
 import CheckIcon from '@rsuite/icons/Check';
 import CloseIcon from '@rsuite/icons/Close';
 
-import { ReactComponent as Logo } from '../../misc/img/logo.svg';
+import {ReactComponent as Logo} from '../../misc/img/logo.svg';
 
 import './RegModalStyle.css'
 import {Registration} from "../../api/user.api";
@@ -35,14 +35,14 @@ const model = Schema.Model({
     password: StringType().isRequired('Это необходимое поле!')
         .minLength(8, 'Необходимо минимум 8 символов'),
     verifiedPassword: StringType()
-        .addRule((value, data)=>{
+        .addRule((value, data) => {
             return value === data.password;
         }, 'Пароли не совпадают')
 })
 
 
 function TextField(props) {
-    const { name, label, accepter, ...rest } = props;
+    const {name, label, accepter, ...rest} = props;
     return (
         <Form.Group controlId={`${name}-3`}>
             <Form.Control placeholder={label} errorPlacement={'bottomEnd'} name={name} accepter={accepter} {...rest} />
@@ -51,7 +51,7 @@ function TextField(props) {
 }
 
 function CustomTextField(props) {
-    const { name, label, accepter, ...rest} = props;
+    const {name, label, accepter, ...rest} = props;
     const [visible, setVisible] = React.useState(false);
 
     const handleChange = () => {
@@ -59,18 +59,19 @@ function CustomTextField(props) {
     };
 
     return (
-        <Form.Group controlId={`${name}-3`} >
+        <Form.Group controlId={`${name}-3`}>
             <InputGroup style={{width: "100%"}}>
-                <Form.Control placeholder={label} errorPlacement={'bottomEnd'} name={name} type={visible ? 'text' : 'password'} accepter={accepter} {...rest} />
+                <Form.Control placeholder={label} errorPlacement={'bottomEnd'} name={name}
+                              type={visible ? 'text' : 'password'} accepter={accepter} {...rest} />
                 <InputGroup.Addon onClick={handleChange}>
-                    {visible ? <CheckIcon /> : <CloseIcon />}
+                    {visible ? <CheckIcon/> : <CloseIcon/>}
                 </InputGroup.Addon>
             </InputGroup>
         </Form.Group>
     );
 }
 
-export default function RegModal(props){
+export default function RegModal(props) {
     const [formError, setFormError] = useState({});
     const [uploading, setUploading] = useState(false)
     const [formValue, setFormValue] = useState({
@@ -100,19 +101,19 @@ export default function RegModal(props){
 
     const regHandler = async () => {
         setUploading(true)
-        Registration(formValue).then(res=>{
-            if(res.Status === "Success"){
+        Registration(formValue).then(res => {
+            if (res.Status === "Success") {
                 toaster.push(messageHandler('Вы успешно зарегестрировались!', 'success'))
                 setUploading(false)
                 props.onClose(true)
             }
-        }).catch((err)=>{
-            if(err.response?.status === 400){
+        }).catch((err) => {
+            if (err.response?.status === 400) {
                 toaster.push(messageHandler('Некоторые данные введены некорректно!', 'warning'))
                 setUploading(false)
                 return
             }
-            if(err.response?.status === 409){
+            if (err.response?.status === 409) {
                 toaster.push(messageHandler('Пользователь с такой почтой уже существует!', 'warning'))
                 setUploading(false)
                 setFormError({name: 'Эта почта уже задействована!'})
@@ -123,19 +124,22 @@ export default function RegModal(props){
         })
     }
 
-    return(
-        <Modal className={'modal-root'} open={props.open} onClose={()=>{props.onClose(); toaster.remove()}} overflow={false} backdrop={"static"}>
+    return (
+        <Modal className={'modal-root'} open={props.open} onClose={() => {
+            props.onClose();
+            toaster.remove()
+        }} overflow={false} backdrop={"static"}>
             <Modal.Header className={'header-style'}>
                 <Logo style={{width: "4em"}}/>
                 <Modal.Title><b>Добро пожаловайть!</b></Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form model={model} fluid onChange={setFormValue} formValue={formValue} onCheck={setFormError}>
-                    <TextField name="first_name" label="Ваше имя"  autoComplete="off"/>
-                    <TextField name="last_name" label="Ваша фамилия"  autoComplete="off"/>
-                    <TextField name="phone_number" label="Ваш телефон"  autoComplete="off"/>
-                    <TextField name="email" label="Ваша электронная почта" />
-                    <CustomTextField name="password" label="Пароль"  autoComplete="off"/>
+                    <TextField name="first_name" label="Ваше имя" autoComplete="off"/>
+                    <TextField name="last_name" label="Ваша фамилия" autoComplete="off"/>
+                    <TextField name="phone_number" label="Ваш телефон" autoComplete="off"/>
+                    <TextField name="email" label="Ваша электронная почта"/>
+                    <CustomTextField name="password" label="Пароль" autoComplete="off"/>
                     <CustomTextField name="verifiedPassword" label="Повторите пароль" autoComplete="off"/>
                 </Form>
             </Modal.Body>
@@ -144,7 +148,10 @@ export default function RegModal(props){
                     <Button onClick={regHandler} appearance="primary" disabled={regAvailable} loading={uploading}>
                         Зарегестрировать
                     </Button>
-                    <Button onClick={()=>{props.onClose(); toaster.remove()}} appearance="subtle">
+                    <Button onClick={() => {
+                        props.onClose();
+                        toaster.remove()
+                    }} appearance="subtle">
                         Отмена
                     </Button>
                 </div>

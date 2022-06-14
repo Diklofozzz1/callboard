@@ -14,16 +14,20 @@ import LogModal from "../LoginModal/LogModal";
 
 export default function Card(props) {
     const [logModal, openLogModal] = useState(false)
+
     const {user} = useAuth()
+
+    // console.log(user)
 
     const ChartIcon = ({color, size}) => (
         <TimeRoundIcon style={{color, marginLeft: 5, marginTop: 5, fontSize: size}}/>
     );
 
+
     return (
-        <div style={props.cardType === 2 ? {display: 'flex', justifyContent: 'center'} : {}}>
+        <div style={props.cardType === 2 ? {display: 'flex', justifyContent: 'center', paddingBottom: '10px'} : {}}>
             {props.cardType === 1 ? (
-                <div key={props.id}  className={'card-cursor'}>
+                <div key={props.id} className={'card-cursor'}>
                     <Panel shaded bordered bodyFill className={'card-style non-touchable'}>
                         <Carousel
                             shape={'bar'}
@@ -42,30 +46,32 @@ export default function Card(props) {
                                 <h4>{props.price} ₽</h4>
                             </div>
                             <div className={'description'}>
-                                    {props.isAuct === true ? (
-                                        <div>
-                                            {props.isActive === true ? (
-                                                <div className={'auct-status'}>
-                                                    <h6>Аукцион активен</h6>
-                                                    <div className={'status-icon'}>
-                                                        <ChartIcon size="1.3em" color="#5ea83e" />
-                                                    </div>
+                                {props.isAuct === true ? (
+                                    <div>
+                                        {props.isActive === true ? (
+                                            <div className={'auct-status'}>
+                                                <h6>Аукцион активен</h6>
+                                                <div className={'status-icon'}>
+                                                    <ChartIcon size="1.3em" color="#5ea83e"/>
                                                 </div>
-                                            ) : (
-                                                <div className={'auct-status'}>
-                                                    <h6>Аукцион не активен</h6>
-                                                    <div className={'status-icon'}>
-                                                        <ChartIcon size="1.3em" color="#93aeba" />
-                                                    </div>
+                                            </div>
+                                        ) : (
+                                            <div className={'auct-status'}>
+                                                <h6>Аукцион не активен</h6>
+                                                <div className={'status-icon'}>
+                                                    <ChartIcon size="1.3em" color="#93aeba"/>
                                                 </div>
-                                            ) }
-                                        </div>
-                                    ) : (
-                                        <h6>Объявление</h6>
-                                        )
-                                    }
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <h6>Объявление</h6>
+                                )
+                                }
                                 <div>
-                                    <Button onClick={() => {console.log('Здарова чертила')}} appearance="ghost"><h6>Подробнее</h6></Button>
+                                    <Button onClick={() => {
+                                        console.log('Здарова чертила')
+                                    }} appearance="ghost"><h6>Подробнее</h6></Button>
                                 </div>
                             </div>
                         </Panel>
@@ -75,7 +81,9 @@ export default function Card(props) {
                 <Panel key={props.id} shaded bodyFill bordered className={'card2'}>
                     <LogModal
                         open={logModal}
-                        onClose={()=>{openLogModal(false)}}
+                        onClose={() => {
+                            openLogModal(false)
+                        }}
                     />
                     <FlexboxGrid className={'flex-position'}>
                         <Carousel
@@ -93,30 +101,30 @@ export default function Card(props) {
                             <div className={'info-root'}>
                                 <h4>{props.label}</h4>
                                 <h4>{props.price} ₽</h4>
-                                <div >
+                                <div>
                                     {props.isAuct === true ? (
                                         <div>
                                             {props.isActive === true ? (
                                                 <div className={'auct-status'}>
                                                     <h6>Аукцион активен</h6>
                                                     <div className={'status-icon'}>
-                                                        <ChartIcon size="1.3em" color="#5ea83e" />
+                                                        <ChartIcon size="1.3em" color="#5ea83e"/>
                                                     </div>
                                                 </div>
                                             ) : (
                                                 <div className={'auct-status'}>
                                                     <h6>Аукцион не активен</h6>
                                                     <div className={'status-icon'}>
-                                                        <ChartIcon size="1.3em" color="#93aeba" />
+                                                        <ChartIcon size="1.3em" color="#93aeba"/>
                                                     </div>
                                                 </div>
-                                            ) }
+                                            )}
                                         </div>
                                     ) : (
                                         <h6>Объявление</h6>
                                     )
                                     }
-                                </div >
+                                </div>
                                 <h6 className={'description2'}>
                                     {props.description}
                                 </h6>
@@ -128,8 +136,10 @@ export default function Card(props) {
                                         {props.creationData}
                                     </h6>
                                 </div>
-                                <div >
-                                    <Button onClick={() => {console.log('Здарова чертила')}} appearance="ghost"><h6>Подробнее</h6></Button>
+                                <div>
+                                    <Button onClick={() => {
+                                        console.log('Здарова чертила')
+                                    }} appearance="ghost"><h6>Подробнее</h6></Button>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +148,9 @@ export default function Card(props) {
                             {user !== undefined ? (<h6>hi</h6>) : (
                                 <div className={'log-link'}>
                                     <h6 className={'log-text-style'}>Чтобы увидеть, кто разместил объявление</h6>
-                                    <Button appearance="link" onClick={()=>{openLogModal(true)}}><b>Войдите в систему!</b></Button>
+                                    <Button appearance="link" onClick={() => {
+                                        openLogModal(true)
+                                    }}><b>Войдите в систему!</b></Button>
                                 </div>
                             )}
                         </div>
