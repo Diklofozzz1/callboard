@@ -6,11 +6,21 @@
     /*background-color: darkseagreen;*/
     padding: 0 10vw 0 10vw;
 }
-.text-style{
-    padding: 5px 15vw 5px 15vw;
+.sort-text-style{
+    padding-top: 5px;
+    padding-right: 10px;
 }
 .hr-style{
     padding: 0 19vw 0 19vw;
+}
+.sort-style{
+    padding: 10px 19vw 20px 19vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.drop-picker{
+    padding-right: 10px;
 }
 /*.card-position{*/
 /*    display: flex;*/
