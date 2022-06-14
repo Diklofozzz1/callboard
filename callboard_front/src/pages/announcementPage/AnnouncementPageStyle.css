@@ -1,0 +1,23 @@
+.root-page{
+    /*background-color: #282c34;*/
+    width:100vw;
+    height: 50vh;
+    justify-content: center;
+}
+.info-group{
+    width: 50%;
+    height: 100%;
+}
+.label-style{
+}
+.log-text-style{
+    text-align: center;
+}
+.user-group{
+
+    height: 100%;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
