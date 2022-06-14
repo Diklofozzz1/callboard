@@ -203,7 +203,8 @@ router.get('/search_by', async (req, res) => {
         let whereConds = new Object({
             where: {
                 complated: false
-            }
+            },
+            order: []
         })
 
         if (searchBy) {
@@ -251,7 +252,7 @@ router.get('/search_by', async (req, res) => {
 
         if (priceSort === 'l') {
             let order = whereConds.order === undefined ? [] : whereConds.order
-            order = [...order, ['price', 'DESC']]
+            order = [...order, ['price', 'ASC']]
             whereConds = {
                 ...whereConds,
                 order: order,
@@ -260,7 +261,7 @@ router.get('/search_by', async (req, res) => {
 
         if (priceSort === 'h') {
             let order = whereConds.order === undefined ? [] : whereConds.order
-            order = [...order, ['price', 'ASC']]
+            order = [...order, ['price', 'DESC']]
             whereConds = {
                 ...whereConds,
                 order: order,
@@ -269,7 +270,7 @@ router.get('/search_by', async (req, res) => {
 
         if (dateSort === 'l') {
             let order = whereConds.order === undefined ? [] : whereConds.order
-            order = [...order, ['price', 'DESC']]
+            order = [...order, ['createdAt', 'DESC']]
             whereConds = {
                 ...whereConds,
                 order: order,
@@ -278,20 +279,23 @@ router.get('/search_by', async (req, res) => {
 
         if (dateSort === 'h') {
             let order = whereConds.order === undefined ? [] : whereConds.order
-            order = [...order, ['price', 'ASC']]
+            order = [...order, ['createdAt', 'ASC']]
             whereConds = {
                 ...whereConds,
                 order: order,
             }
         }
 
+
         let searchedAnnouncement = await Connect.models.Announcement.findAll({
+            order: [...whereConds.order],
             where:{
                 ...whereConds.where,
                 complated: false
             },
             limit: parseInt(count),
-            offset: parseInt(padding)
+            offset: parseInt(padding),
+
         })
 
         for(let item of searchedAnnouncement){
